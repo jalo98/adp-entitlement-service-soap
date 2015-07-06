@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="urn:bearstearns.com:bsc.status:v1.0" xmlns:tns="urn:bearstearns.com:bsc.status:v1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   
+   <xs:simpleType name="MessageSeverityType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="NOTE"/> 
+         <xs:enumeration value="WARNING"/> 
+         <xs:enumeration value="ERROR"/> 
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="StatusMessageType">
+      <xs:sequence>
+         <xs:element name="messageCode" type="xs:string"/> 
+         <xs:element name="messageSeverity" type="tns:MessageSeverityType"/> 
+         <xs:element name="messageText" type="xs:string"/> 
+         <xs:element name="referencePath" type="xs:string" minOccurs="0" maxOccurs="unbounded"/> 
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="StatusMessagesType">
+      <xs:sequence>
+         <xs:element name="statusMessage" type="tns:StatusMessageType" minOccurs="0" maxOccurs="unbounded"/> 
+   </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="StatusTypeType">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="SUCCESS"/> 
+         <xs:enumeration value="FAILURE"/> 
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="StatusType">
+      <xs:sequence>
+         <xs:element name="statusType" type="tns:StatusTypeType"/> 
+         <xs:element name="statusMessages" type="tns:StatusMessagesType" minOccurs="0"/> 
+         <!-- Added for KOPS limitation on SOLA -->
+         <xs:element name="DID" minOccurs="0">
+            <xs:simpleType>
+               <xs:restriction base="xs:token">
+                  <xs:minLength value="7"/>
+                  <xs:maxLength value="11"/>
+               </xs:restriction>
+            </xs:simpleType>
+         </xs:element>
+      </xs:sequence>
+   </xs:complexType>
+</xs:schema>

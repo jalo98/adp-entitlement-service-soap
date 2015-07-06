@@ -1,0 +1,1085 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:schema="urn:bearstearns.com:bsc.KopsRequest:v1.0" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="urn:bearstearns.com:bsc.KopsRequest:v1.0">
+  <wsdl:types>
+    <xs:schema xmlns:hns="urn:bearstearns.com:bsc.soap.BSCHeader:v2.0" xmlns:sns="urn:bearstearns.com:bsc.status:v1.0" xmlns:tns="urn:bearstearns.com:bsc.KopsRequest:v1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:bearstearns.com:bsc.KopsRequest:v1.0">
+   <xs:import namespace="urn:bearstearns.com:bsc.status:v1.0" schemaLocation="./BSCStatus.xsd"/>
+   <xs:import namespace="urn:bearstearns.com:bsc.soap.BSCHeader:v2.0" schemaLocation="./BSCHeader.xsd"/>
+   <xs:complexType name="HeaderType">
+      <xs:annotation>
+         <xs:documentation>This contains System Generic ID or sometime User DID (optional). When User DID is supplied, this is validated against the authentication information on the header.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="RequestTimestamp" type="xs:date"/>
+         <xs:element name="SystemPassword" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <!-- 
+
+       Requests
+
+    -->
+   <xs:element name="SetGroupMembershipRequest" type="tns:SetGroupMembershipRequestType"/>
+   <xs:element name="GroupCreateDeleteRequest" type="tns:GroupCreateDeleteRequestType"/>
+   <xs:element name="GroupMembershipRequest" type="tns:GroupMembershipRequestType"/>
+   <xs:element name="AddKopsIdToGroupRequest" type="tns:AddKopsIdToGroupRequestType"/>
+   <xs:element name="RemoveKopsIdFromGroupRequest" type="tns:RemoveKopsIdFromGroupRequestType"/>
+   <xs:element name="GroupEntitlementRequest" type="tns:GroupEntitlementRequestType"/>
+   <xs:element name="CapabilityMetaDataRequest" type="tns:CapabilityMetaDataRequestType"/>
+   <xs:element name="SetEntitlementRequest" type="tns:SetEntitlementRequestType"/>
+   <xs:element name="GetKopsIdInfoRequest" type="tns:GetKopsIdInfoRequestType"/>
+   <xs:element name="CreateKopsIdRequest" type="tns:CreateKopsIdRequestType"/>
+   <xs:element name="GetFirmInfoRequest" type="tns:GetFirmInfoRequestType"/>
+   <xs:element name="ModifyKopsIdRequest" type="tns:ModifyKopsIdRequestType"/>
+   <xs:element name="ExpireKopsIdRequest" type="tns:ExpireKopsIdRequestType"/>
+   <xs:element name="UnexpireKopsIdRequest" type="tns:UnexpireKopsIdRequestType"/>
+   <!-- 
+
+       Request Types
+
+    -->
+    
+   <xs:complexType name="GetFirmInfoRequestType">
+      <xs:sequence>
+      	 <xs:element maxOccurs="1" minOccurs="0" name="FirmId" type="tns:FirmIdType"/>
+   	     <xs:element maxOccurs="1" minOccurs="0" name="FirmPrefix" type="tns:FirmPrefixType"/>         
+         <!--  <xs:element name="FirmRelmId" type="xs:string" minOccurs="0" maxOccurs="1"/>  -->
+      </xs:sequence>   	
+   </xs:complexType>
+   <xs:complexType name="CreateKopsIdRequestType">
+      <xs:choice>
+          <xs:element name="NewConsultantId" type="tns:NewConsultantIdType"/>
+          <xs:element name="NewFirmId" type="tns:NewFirmIdType"/>
+          <xs:element name="NewEmployeeVendorId" type="tns:NewEmployeeVendorIdType"/>
+      </xs:choice>
+   </xs:complexType>
+   <xs:complexType name="SetGroupMembershipRequestType">
+      <xs:sequence>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+         <xs:choice>
+            <xs:element minOccurs="0" name="RemoveAllMultiUserGroupAccess" type="tns:YNOnlyIndicatorTypeEnum"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="RemoveKopsIdFromMultiUserGroup" type="tns:MultiUserGroupIdType"/>
+         </xs:choice>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="AddKopsIdToMultiUserGroup" type="tns:MultiUserGroupIdType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupCreateDeleteRequestType">
+      <xs:sequence>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="DeleteSingleUserGroup" type="tns:KopsIDType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="DeleteMultiUserGroup" type="tns:MultiUserGroupNameType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="CreateSingleUserGroup" type="tns:KopsIDType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="CreateMultiUserGroup" type="tns:MultiUserGroupType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupMembershipRequestType">
+      <xs:sequence>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="AddKopsIdToGroupRequestType">
+      <xs:sequence>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+         <xs:element name="Group" type="tns:GroupNameType"/>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="RemoveKopsIdFromGroupRequestType">
+      <xs:sequence>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+         <xs:element name="Group" type="tns:GroupNameType"/>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupEntitlementRequestType">
+      <xs:sequence>
+         <xs:element name="Group" type="tns:GroupNameType"/>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+         <xs:element minOccurs="0" name="InquiryInd" type="tns:YNOnlyIndicatorTypeEnum"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ApplicationStructureRequestType">
+      <xs:sequence>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="CapabilityMetaDataRequestType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" name="BusinessUnit" type="tns:BusinessUnitType"/>
+         <xs:element name="BaseCase" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element name="IncludeExternal" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element name="PrimarySecondaryMatch" type="tns:PrimarySecondaryMatchType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="SetEntitlementRequestType">
+      <xs:annotation>
+         <xs:documentation>Set the entitlements for one or more functions in a given access group</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+         <xs:element minOccurs="0" name="Group" type="tns:GroupNameType"/>
+         <xs:element minOccurs="0" name="FunctionEntitlements" type="tns:FunctionEntitlementsType"/>
+         <xs:element minOccurs="0" name="DataEntitlements" type="tns:DataEntitlementsType"/>
+         <xs:element minOccurs="0" name="AccountEntitlements" type="tns:AccountEntitlementsType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GetKopsIdInfoRequestType">
+      <xs:choice>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+         <xs:element name="RelmId" type="xs:string"/>
+         <xs:element name="SnacsID" type="tns:SnacsIDType"/>
+         <xs:element name="SID" type="tns:SIDType"/>
+      </xs:choice>   
+   </xs:complexType>
+   <xs:complexType name="ModifyKopsIdRequestType">
+       <xs:sequence>
+           <xs:element maxOccurs="1" minOccurs="1" name="KopsID" type="tns:KopsIDType"/>
+           <xs:element maxOccurs="1" minOccurs="0" name="UserRelmId" type="xs:string"/>
+           <xs:element maxOccurs="1" minOccurs="0" name="EmailAddress" type="xs:string"/>
+           <xs:element maxOccurs="1" minOccurs="0" name="Phone" type="xs:string"/>
+       </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ExpireKopsIdRequestType">
+      <xs:sequence>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="UnexpireKopsIdRequestType">
+      <xs:sequence>
+         <xs:element name="KopsID" type="tns:KopsIDType"/>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <!-- 
+
+       Responses
+
+    -->
+   <xs:element name="SetGroupMembershipResponse" type="tns:SetGroupMembershipResponseType"/>
+   <xs:element name="GroupCreateDeleteResponse" type="tns:GroupCreateDeleteResponseType"/>
+   <xs:element name="GroupMembershipResponse" type="tns:GroupMembershipResponseType"/>
+   <xs:element name="GroupEntitlementResponse" type="tns:GroupEntitlementResponseType"/>
+   <xs:element name="AddKopsIdToGroupResponse" type="tns:AddKopsIdToGroupResponseType"/>
+   <xs:element name="RemoveKopsIdFromGroupResponse" type="tns:RemoveKopsIdFromGroupResponseType"/>
+   <xs:element name="status" type="sns:StatusType"/>
+   <xs:element name="ApplicationStructureResponse" type="tns:ApplicationStructureResponseType"/>
+   <xs:element name="CapabilityMetaDataResponse" type="tns:CapabilityMetaDataResponseType"/>
+   <xs:element name="SetEntitlementResponse" type="tns:SetEntitlementResponseType"/>
+   <xs:element name="GetKopsIdInfoResponse" type="tns:GetKopsIdInfoResponseType"/>
+   <xs:element name="CreateKopsIdResponse" type="tns:CreateKopsIdResponseType"/>
+   <xs:element name="GetFirmInfoResponse" type="tns:GetFirmInfoResponseType"/>
+    <xs:element name="ModifyKopsIdResponse" type="tns:ModifyKopsIdResponseType"/>
+    <xs:element name="ExpireKopsIdResponse" type="tns:ExpireKopsIdResponseType"/>
+    <xs:element name="UnexpireKopsIdResponse" type="tns:UnexpireKopsIdResponseType"/>
+   <!-- 
+
+       Response Types
+
+    -->
+    
+   <xs:complexType name="GetFirmInfoResponseType">
+      <xs:sequence>
+         <xs:element maxOccurs="1" minOccurs="0" name="FirmInfo" type="tns:FirmInfoType"/>     
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>        
+   <xs:complexType name="CreateKopsIdResponseType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="KopsID" type="tns:KopsIDType"/>
+         <xs:element minOccurs="0" name="SnacsID" type="tns:SnacsIDType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="SetGroupMembershipResponseType">
+      <xs:sequence>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupCreateDeleteResponseType">
+      <xs:sequence>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupMembershipResponseType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="KopsID" type="tns:KopsIDType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="Membership" type="tns:GroupType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="AddKopsIdToGroupResponseType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="KopsID" type="tns:KopsIDType"/>
+         <xs:element minOccurs="0" name="Group" type="tns:GroupNameType"/>
+         <xs:element minOccurs="0" name="Application" type="tns:ApplicationNameType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="RemoveKopsIdFromGroupResponseType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="KopsID" type="tns:KopsIDType"/>
+         <xs:element minOccurs="0" name="Group" type="tns:GroupNameType"/>
+         <xs:element minOccurs="0" name="Application" type="tns:ApplicationNameType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ApplicationStructureResponseType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Application" type="tns:ApplicationType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="Function" type="tns:FunctionType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="Data" type="tns:DataType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupEntitlementResponseType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="GroupName" type="tns:GroupNameType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="FunctionEntitlement" type="tns:FunctionEntitlementType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="DataEntitlement" type="tns:DataEntitlementType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="AccountEntitlement" type="tns:AccountRangeEntitlementType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="CapabilityMetaDataResponseType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="CapabilityMetaData" type="tns:CapabilityMetaDataType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="SetEntitlementResponseType">
+      <xs:sequence>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GetKopsIdInfoResponseType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="KopsIdInfo" type="tns:KopsIdInfoType"/>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ModifyKopsIdResponseType">
+      <xs:sequence>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ExpireKopsIdResponseType">
+      <xs:sequence>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="UnexpireKopsIdResponseType">
+      <xs:sequence>
+         <xs:element name="status" type="sns:StatusType"/>
+      </xs:sequence>
+   </xs:complexType>
+   
+   <!-- 
+
+      Basic object types
+
+   -->
+   <xs:complexType name="NewConsultantIdType">
+      <xs:sequence>
+         <xs:element name="SnacsID" type="tns:SnacsIDType"/>
+         <xs:element name="FirstName" type="xs:string"/>
+         <xs:element name="LastName" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>   
+   <xs:complexType name="NewFirmIdType">
+      <xs:sequence>
+         <xs:element name="SnacsID" type="tns:SnacsIDType"/>         
+         <xs:choice>
+         	<xs:element minOccurs="0" name="FirmPrefix" type="tns:FirmPrefixType"/>
+         	<xs:element minOccurs="0" name="FirmId" type="tns:FirmIdType"/>
+         </xs:choice>         
+         <xs:element minOccurs="0" name="UserRelmId" type="xs:string"/>
+         <xs:element name="FirstName" type="xs:string"/>
+         <xs:element name="LastName" type="xs:string"/>
+         <xs:element minOccurs="0" name="EmailAddress" type="xs:string"/>
+         <xs:element minOccurs="0" name="Phone" type="xs:string"/>
+         <xs:element minOccurs="0" name="PrimaryInd" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element minOccurs="0" name="Lob" type="tns:LOBType"/>         
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="NewEmployeeVendorIdType">
+       <xs:sequence>
+           <xs:element name="FirstName" type="xs:string"/>
+           <xs:element name="LastName" type="xs:string"/>
+           <xs:element name="SnacsID" type="tns:SnacsIDType"/>
+           <xs:element name="LongPrefix" type="tns:LongPrefixType"/>
+           <xs:element minOccurs="0" name="UserRelmId" type="xs:string"/>
+           <xs:element minOccurs="0" name="EmailAddress" type="xs:string"/>
+           <xs:element minOccurs="0" name="Phone" type="xs:string"/>
+           <xs:element minOccurs="0" name="PrimaryInd" type="tns:YNOnlyIndicatorTypeEnum"/>
+       </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="AccountEntitlementsType">
+      <xs:sequence>
+         <xs:choice>
+            <xs:element minOccurs="0" name="RemoveAllAccountEntitlements" type="tns:YNOnlyIndicatorTypeEnum"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="RemoveAccountEntitlement" type="tns:AccountRangeEntitlementType"/>
+         </xs:choice>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="AccountEntitlement" type="tns:AccountRangeEntitlementType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="FunctionEntitlementsType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="RemoveAllFunctionEntitlements" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="FunctionEntitlement" type="tns:FunctionEntitlementType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="DataEntitlementsType">
+      <xs:sequence>
+         <xs:choice>
+            <xs:element minOccurs="0" name="RemoveAllDataEntitlements" type="tns:YNOnlyIndicatorTypeEnum"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="RemoveDataEntitlement" type="tns:DataEntitlementType"/>
+         </xs:choice>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="DataEntitlement" type="tns:DataEntitlementType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="KopsIdInfoType">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="KopsID" type="tns:KopsIDType"/>
+         <xs:element name="FullName" type="xs:string"/>
+         <xs:element name="FirstName" type="xs:string"/>
+         <xs:element name="LastName" type="xs:string"/>
+         <xs:element name="EmailAddress" type="xs:string"/>
+         <xs:element name="Phone" type="xs:string"/>
+         <xs:element name="SnacsID" type="tns:SnacsIDType"/>
+         <xs:element name="SID" type="tns:SIDType"/>
+         <xs:element name="RelmId" type="xs:string"/>
+         <xs:element name="PrimaryInd" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element name="CreationDate" type="xs:date"/>
+         <xs:element name="ExpirationDate" type="xs:date"/>
+      </xs:sequence>
+      <xs:anyAttribute/>
+   </xs:complexType>
+   <xs:complexType name="FirmInfoType">
+      <xs:sequence>
+         <xs:element maxOccurs="1" minOccurs="1" name="FirmId" type="tns:FirmIdType"/>      
+         <xs:element maxOccurs="1" minOccurs="0" name="FirmName" type="xs:string"/>
+   	     <xs:element maxOccurs="1" minOccurs="0" name="FirmPrefix" type="tns:FirmPrefixType"/>
+		 <xs:element maxOccurs="1" minOccurs="0" name="OccdInd" type="xs:boolean"/>   	        	     
+         <!--  <xs:element name="FirmRelmId" type="xs:string" minOccurs="0" maxOccurs="1"/>  -->       
+      </xs:sequence>
+      <xs:anyAttribute/>
+   </xs:complexType>         
+   <xs:complexType name="CapabilityMetaDataType">
+      <xs:sequence>
+         <xs:element name="CapabilityName" type="xs:string"/>
+         <xs:element minOccurs="0" name="Description" type="xs:string"/>
+         <xs:element minOccurs="0" name="Label" type="xs:string"/>
+         <!-- Why is this here? <xs:element name="Scope" type="kws:scopeType"/> -->
+         <xs:element name="PrimaryBU" type="tns:BusinessUnitType"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="SecondaryBU" type="tns:BusinessUnitType"/>
+         <xs:element minOccurs="0" name="IsBaseCase" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element name="StartDate" type="xs:date"/>
+         <xs:element name="EndDate" type="xs:date"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="DependantCapability" type="xs:string"/>
+         <xs:element name="Elements" type="tns:ElementsMetaType"/>
+         <xs:element name="Functions" type="tns:FunctionsMetaType"/>
+      </xs:sequence>
+      <xs:anyAttribute/>
+   </xs:complexType>
+   <xs:complexType name="ElementsMetaType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="Element" type="tns:ElementMetaType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="FunctionsMetaType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="Function" type="tns:FunctionMetaType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="FunctionMetaType">
+      <xs:sequence>
+         <xs:element name="FunctionName" type="xs:string"/>
+         <xs:element name="Description" type="xs:string"/>
+         <xs:element name="Label" type="xs:string"/>
+         <xs:element name="BusinessUnit" type="xs:string"/>
+         <xs:element name="StartDate" type="xs:date"/>
+         <xs:element name="EndDate" type="xs:date"/>
+         <xs:element name="ValueAttributes" type="tns:ValueAttributesType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ElementMetaType">
+      <xs:sequence>
+         <xs:element name="ElementName" type="xs:string"/>
+         <xs:element name="Description" type="xs:string"/>
+         <xs:element name="Label" type="xs:string"/>
+         <xs:element name="BusinessUnit" type="xs:string"/>
+         <xs:element name="Style" type="tns:StyleType"/>
+         <xs:element name="StartDate" type="xs:date"/>
+         <xs:element name="EndDate" type="xs:date"/>
+         <xs:element name="ValueAttributes" type="tns:ValueAttributesType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ValueAttributesType">
+      <xs:sequence>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="ValueAttribute" type="tns:ValueAttributeType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ValueAttributeType">
+      <xs:sequence>
+         <xs:element name="Value" type="xs:string"/>
+         <xs:element name="Description" type="xs:string"/>
+         <xs:element name="Label" type="xs:string"/>
+         <xs:element maxOccurs="unbounded" minOccurs="0" name="BusinessUnitDisplay" type="xs:string"/>
+         <xs:element name="BusinessUnitDefault" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="StyleType">
+      <xs:sequence>
+         <xs:element name="RepeatCount" type="xs:integer"/>
+         <xs:element name="FieldLength" type="tns:RangeType"/>
+         <xs:element name="Validation" type="tns:ElementValidationType"/>
+         <xs:element name="IsRange" type="tns:YNOnlyIndicatorTypeEnum"/>
+         <xs:element name="Enumeration" type="tns:EnumerationType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="ElementValidationType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="NAA"/>
+         <xs:enumeration value="RELM"/>
+         <xs:enumeration value="NUMERIC"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="EnumerationType">
+      <xs:sequence>
+         <xs:element name="Value" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="RangeType">
+      <xs:all>
+         <xs:element name="RangeBottom" type="xs:integer"/>
+         <xs:element name="RangeTop" type="xs:integer"/>
+      </xs:all>
+   </xs:complexType>
+   <xs:simpleType name="ScopeType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="IN"/>
+         <xs:enumeration value="EX"/>
+         <xs:enumeration value="BT"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="DataEntitlementType">
+      <xs:annotation>
+         <xs:documentation>Date entitlements</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="Name" type="tns:DescriptionType"/>
+         <xs:choice>
+            <xs:element maxOccurs="unbounded" name="StringValue" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" name="NumericValue" type="xs:integer"/>
+            <xs:element maxOccurs="unbounded" name="StringRangeValue" type="tns:StringRangeType"/>
+            <xs:element maxOccurs="unbounded" name="NumericRangeValue" type="tns:NumericRangeType"/>
+         </xs:choice>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="NumericRangeType">
+      <xs:sequence>
+         <xs:element name="FromValue" type="xs:integer"/>
+         <xs:element name="ToValue" type="xs:integer"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="StringRangeType">
+      <xs:sequence>
+         <xs:element name="FromValue" type="xs:string"/>
+         <xs:element name="ToValue" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="AccountRangeEntitlementType">
+      <xs:annotation>
+         <xs:documentation>lexical range of accounts</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="FromAccount" type="tns:AccountType"/>
+         <xs:element name="ToAccount" type="tns:AccountType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="FunctionEntitlementType">
+      <xs:annotation>
+         <xs:documentation>Functions and the level of access</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="FunctionName" type="tns:FunctionNameType"/>
+         <xs:element name="ReadUpdateAccess" type="tns:FunctionAccessTypeEnum"/>
+         <xs:element minOccurs="0" name="AccessLevel" type="tns:FunctionAccessLevelType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="RREntitlementType">
+      <xs:annotation>
+         <xs:documentation>Assignement of individual RRs and/or groupings of RRs and/or all RRs</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element maxOccurs="999" name="RegisteredRepresentative" type="tns:RRType"/>
+         <xs:element maxOccurs="99" name="RegisteredRepresentativeGroup" type="tns:RRGroupType"/>
+         <xs:element name="AllRepresentatives" type="tns:YNIndicatorTypeEnum"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="GroupType">
+      <xs:annotation>
+         <xs:documentation>Basic KOPS Group info</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="Group" type="tns:GroupNameType"/>
+         <xs:element name="Application" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="ApplicationType">
+      <xs:annotation>
+         <xs:documentation>Basic KOPS application info</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="Name" type="tns:ApplicationNameType"/>
+         <xs:element name="Description" type="tns:ApplicationDescriptionType"/>
+         <xs:element name="Platform" type="tns:PlatformTypeEnum"/>
+         <xs:element name="DeliverReport" type="tns:YNIndicatorTypeEnum"/>
+         <xs:element name="IsSnacsIDRequired" type="tns:YNIndicatorTypeEnum"/>
+         <xs:element name="SnacsID" type="tns:SnacsIDType"/>
+         <xs:element name="IsAvailableToClearance" type="tns:YNIndicatorTypeEnum"/>
+         <xs:element name="OneOffApplication" type="tns:YNIndicatorTypeEnum"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="FunctionType">
+      <xs:annotation>
+         <xs:documentation>KOPS functions are entitled for R/W or by access level</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="FunctionName" type="tns:FunctionNameType"/>
+         <xs:element name="IsAvailableToClearance" type="tns:YNIndicatorTypeEnum"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="DataType">
+      <xs:annotation>
+         <xs:documentation>Data fields are fairly flexible entitlement elements which can contain free format text, numbers, accounts or families.  KOPS also supports are repeating type that can take on more than on value.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+         <xs:element name="Description" type="tns:DescriptionType"/>
+         <xs:element name="MinimumLength" type="tns:DataLengthType"/>
+         <xs:element name="MaximumLength" type="tns:DataLengthType"/>
+         <xs:element name="RepeatCount" type="tns:RepeatCountType"/>
+         <xs:element name="IsRange" type="tns:YNIndicatorTypeEnum"/>
+         <xs:element name="IsNumeric" type="tns:YNIndicatorTypeEnum"/>
+         <xs:element name="IsAvailableToClearance" type="tns:YNIndicatorTypeEnum"/>
+         <xs:element name="DataCategory" type="tns:DataCategoryTypeEnum"/>
+         <xs:element minOccurs="0" name="DataValueEnum" type="tns:DataValueEnumType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="MultiUserGroupIdType">
+      <xs:sequence>
+         <xs:element name="GroupName" type="tns:MultiUserGroupNameType"/>
+         <xs:element name="ApplicationName" type="tns:ApplicationNameType"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="MultiUserGroupType">
+      <xs:sequence>
+         <xs:element name="GroupName" type="tns:MultiUserGroupNameType"/>
+         <xs:element name="Description" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="MultiUserGroupNameType">
+      <xs:restriction base="xs:token">
+         <xs:minLength value="5"/>
+         <xs:maxLength value="6"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ApplicationNameType">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="40"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="FunctionNameType">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="50"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="GroupNameType">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="8"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="FirmPrefixType">
+      <xs:restriction base="xs:string">
+      	 <xs:minLength value="3"/> 	
+         <xs:maxLength value="3"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="FirmIdType">
+      <xs:restriction base="xs:string">
+      	 <xs:minLength value="3"/> 	
+         <xs:maxLength value="7"/>
+      </xs:restriction>
+   </xs:simpleType>   
+   <xs:simpleType name="AccountType">
+      <xs:annotation>
+         <xs:documentation>TODO:  Verify length of this field</xs:documentation>
+      </xs:annotation>
+      <xs:restriction base="xs:token">
+         <xs:pattern value="[0-9]{8}"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="RRType">
+      <xs:restriction base="xs:token">
+         <xs:maxLength value="4"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="RRGroupType">
+      <xs:restriction base="xs:token">
+         <xs:maxLength value="4"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="SIDType">
+      <xs:restriction base="xs:token">
+         <xs:maxLength value="11"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="SnacsIDType">
+      <xs:restriction base="xs:token">
+         <xs:maxLength value="11"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="KopsIDType">
+      <xs:restriction base="xs:token">
+         <xs:minLength value="7"/>
+         <xs:maxLength value="8"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="ApplicationDescriptionType">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="255"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="PlatformTypeEnum">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="Mainframe"/>
+         <xs:enumeration value="AS400"/>
+         <xs:enumeration value="Other"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="PrimarySecondaryMatchType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="Primary"/>
+         <xs:enumeration value="Secondary"/>
+         <xs:enumeration value="Both"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="DataValueEnumType">
+      <xs:sequence>
+         <xs:element maxOccurs="255" name="LegalValue" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="FunctionAccessLevelType">
+      <xs:restriction base="xs:string">
+         <xs:pattern value="[0-9]"/>
+         <xs:pattern value=""/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="YNIndicatorTypeEnum">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="Y"/>
+         <xs:enumeration value="N"/>
+         <xs:enumeration value=""/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="YNOnlyIndicatorTypeEnum">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="Y"/>
+         <xs:enumeration value="N"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="FunctionAccessTypeEnum">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="V"/>
+         <xs:enumeration value="U"/>
+         <xs:enumeration value="N"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DescriptionType">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="50"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:complexType name="DataValueType">
+      <xs:choice>
+         <xs:element name="StringValue" type="xs:string"/>
+         <xs:element name="NumericValue" type="xs:integer"/>
+         <!--           <xs:element name="RangeValue" type="xs:integer"/> TODO How do ranges work? -->
+      </xs:choice>
+   </xs:complexType>
+   <xs:simpleType name="DataLengthType">
+      <xs:restriction base="xs:integer">
+         <xs:minInclusive value="0"/>
+         <xs:maxInclusive value="255"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="RepeatCountType">
+      <xs:restriction base="xs:integer">
+         <xs:minInclusive value="0"/>
+         <xs:maxInclusive value="999"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="DataCategoryTypeEnum">
+      <xs:restriction base="xs:string">
+         <xs:enumeration value="None"/>
+         <xs:enumeration value="Family"/>
+         <xs:enumeration value="Account"/>
+         <xs:enumeration value="Relm Account"/>
+      </xs:restriction>
+   </xs:simpleType>
+   <xs:simpleType name="BusinessUnitType">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="4"/>
+      </xs:restriction>
+   </xs:simpleType>  
+   <xs:simpleType name="LOBType">
+      <xs:restriction base="xs:token">
+         <xs:enumeration value="CLEARANCE"/>
+         <xs:enumeration value="RETAIL"/>
+         <xs:enumeration value="SPECIALIST"/>
+      </xs:restriction>
+   </xs:simpleType>   
+   <xs:simpleType name="LongPrefixType">
+       <xs:restriction base="xs:token">
+           <xs:length value="4"/>
+       </xs:restriction>
+   </xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="SetGroupMembershipResponse">
+    <wsdl:part element="schema:SetGroupMembershipResponse" name="SetGroupMembershipResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GroupMembershipRequest">
+    <wsdl:part element="schema:GroupMembershipRequest" name="GroupMembershipRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetEntitlementRequest">
+    <wsdl:part element="schema:SetEntitlementRequest" name="SetEntitlementRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetGroupMembershipRequest">
+    <wsdl:part element="schema:SetGroupMembershipRequest" name="SetGroupMembershipRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AddKopsIdToGroupRequest">
+    <wsdl:part element="schema:AddKopsIdToGroupRequest" name="AddKopsIdToGroupRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreateKopsIdResponse">
+    <wsdl:part element="schema:CreateKopsIdResponse" name="CreateKopsIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="AddKopsIdToGroupResponse">
+    <wsdl:part element="schema:AddKopsIdToGroupResponse" name="AddKopsIdToGroupResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RemoveKopsIdFromGroupResponse">
+    <wsdl:part element="schema:RemoveKopsIdFromGroupResponse" name="RemoveKopsIdFromGroupResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GroupEntitlementRequest">
+    <wsdl:part element="schema:GroupEntitlementRequest" name="GroupEntitlementRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ApplicationStructureResponse">
+    <wsdl:part element="schema:ApplicationStructureResponse" name="ApplicationStructureResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetKopsIdInfoResponse">
+    <wsdl:part element="schema:GetKopsIdInfoResponse" name="GetKopsIdInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GroupEntitlementResponse">
+    <wsdl:part element="schema:GroupEntitlementResponse" name="GroupEntitlementResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ExpireKopsIdRequest">
+    <wsdl:part element="schema:ExpireKopsIdRequest" name="ExpireKopsIdRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UnexpireKopsIdRequest">
+    <wsdl:part element="schema:UnexpireKopsIdRequest" name="UnexpireKopsIdRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ModifyKopsIdResponse">
+    <wsdl:part element="schema:ModifyKopsIdResponse" name="ModifyKopsIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CapabilityMetaDataResponse">
+    <wsdl:part element="schema:CapabilityMetaDataResponse" name="CapabilityMetaDataResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetKopsIdInfoRequest">
+    <wsdl:part element="schema:GetKopsIdInfoRequest" name="GetKopsIdInfoRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GroupCreateDeleteResponse">
+    <wsdl:part element="schema:GroupCreateDeleteResponse" name="GroupCreateDeleteResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="SetEntitlementResponse">
+    <wsdl:part element="schema:SetEntitlementResponse" name="SetEntitlementResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetFirmInfoResponse">
+    <wsdl:part element="schema:GetFirmInfoResponse" name="GetFirmInfoResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetFirmInfoRequest">
+    <wsdl:part element="schema:GetFirmInfoRequest" name="GetFirmInfoRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ModifyKopsIdRequest">
+    <wsdl:part element="schema:ModifyKopsIdRequest" name="ModifyKopsIdRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GroupCreateDeleteRequest">
+    <wsdl:part element="schema:GroupCreateDeleteRequest" name="GroupCreateDeleteRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UnexpireKopsIdResponse">
+    <wsdl:part element="schema:UnexpireKopsIdResponse" name="UnexpireKopsIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ExpireKopsIdResponse">
+    <wsdl:part element="schema:ExpireKopsIdResponse" name="ExpireKopsIdResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CapabilityMetaDataRequest">
+    <wsdl:part element="schema:CapabilityMetaDataRequest" name="CapabilityMetaDataRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="RemoveKopsIdFromGroupRequest">
+    <wsdl:part element="schema:RemoveKopsIdFromGroupRequest" name="RemoveKopsIdFromGroupRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CreateKopsIdRequest">
+    <wsdl:part element="schema:CreateKopsIdRequest" name="CreateKopsIdRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GroupMembershipResponse">
+    <wsdl:part element="schema:GroupMembershipResponse" name="GroupMembershipResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="Kops">
+    <wsdl:operation name="GroupMembership">
+      <wsdl:input message="schema:GroupMembershipRequest" name="GroupMembershipRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:GroupMembershipResponse" name="GroupMembershipResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetEntitlement">
+      <wsdl:input message="schema:SetEntitlementRequest" name="SetEntitlementRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:SetEntitlementResponse" name="SetEntitlementResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetGroupMembership">
+      <wsdl:input message="schema:SetGroupMembershipRequest" name="SetGroupMembershipRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:SetGroupMembershipResponse" name="SetGroupMembershipResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddKopsIdToGroup">
+      <wsdl:input message="schema:AddKopsIdToGroupRequest" name="AddKopsIdToGroupRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:AddKopsIdToGroupResponse" name="AddKopsIdToGroupResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GroupEntitlement">
+      <wsdl:input message="schema:GroupEntitlementRequest" name="GroupEntitlementRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:GroupEntitlementResponse" name="GroupEntitlementResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExpireKopsId">
+      <wsdl:input message="schema:ExpireKopsIdRequest" name="ExpireKopsIdRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:ExpireKopsIdResponse" name="ExpireKopsIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnexpireKopsId">
+      <wsdl:input message="schema:UnexpireKopsIdRequest" name="UnexpireKopsIdRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:UnexpireKopsIdResponse" name="UnexpireKopsIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetKopsIdInfo">
+      <wsdl:input message="schema:GetKopsIdInfoRequest" name="GetKopsIdInfoRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:GetKopsIdInfoResponse" name="GetKopsIdInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFirmInfo">
+      <wsdl:input message="schema:GetFirmInfoRequest" name="GetFirmInfoRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:GetFirmInfoResponse" name="GetFirmInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyKopsId">
+      <wsdl:input message="schema:ModifyKopsIdRequest" name="ModifyKopsIdRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:ModifyKopsIdResponse" name="ModifyKopsIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GroupCreateDelete">
+      <wsdl:input message="schema:GroupCreateDeleteRequest" name="GroupCreateDeleteRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:GroupCreateDeleteResponse" name="GroupCreateDeleteResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CapabilityMetaData">
+      <wsdl:input message="schema:CapabilityMetaDataRequest" name="CapabilityMetaDataRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:CapabilityMetaDataResponse" name="CapabilityMetaDataResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveKopsIdFromGroup">
+      <wsdl:input message="schema:RemoveKopsIdFromGroupRequest" name="RemoveKopsIdFromGroupRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:RemoveKopsIdFromGroupResponse" name="RemoveKopsIdFromGroupResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateKopsId">
+      <wsdl:input message="schema:CreateKopsIdRequest" name="CreateKopsIdRequest">
+    </wsdl:input>
+      <wsdl:output message="schema:CreateKopsIdResponse" name="CreateKopsIdResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="KopsBinding" type="schema:Kops">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GroupMembership">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GroupMembershipRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GroupMembershipResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetEntitlement">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="SetEntitlementRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetEntitlementResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetGroupMembership">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="SetGroupMembershipRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="SetGroupMembershipResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddKopsIdToGroup">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="AddKopsIdToGroupRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="AddKopsIdToGroupResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GroupEntitlement">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GroupEntitlementRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GroupEntitlementResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExpireKopsId">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ExpireKopsIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ExpireKopsIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UnexpireKopsId">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="UnexpireKopsIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="UnexpireKopsIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetKopsIdInfo">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetKopsIdInfoRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetKopsIdInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFirmInfo">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GetFirmInfoRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GetFirmInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ModifyKopsId">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="ModifyKopsIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="ModifyKopsIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GroupCreateDelete">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="GroupCreateDeleteRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="GroupCreateDeleteResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CapabilityMetaData">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CapabilityMetaDataRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CapabilityMetaDataResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RemoveKopsIdFromGroup">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="RemoveKopsIdFromGroupRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="RemoveKopsIdFromGroupResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateKopsId">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="CreateKopsIdRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="CreateKopsIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="KopsService">
+    <wsdl:port binding="schema:KopsBinding" name="KopsPort">
+      <soap:address location="https://bds-sit1-kopsws.jpmchase.net:8481/kops/ws/kopsService/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

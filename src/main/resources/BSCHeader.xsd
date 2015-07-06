@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Raj Pydishetty (Bear Stearns & Co.) -->
+<!--
+The information contained in this document is subject to change without notice.  No part of this document may be reproduced or transmitted in any form or by any means, electronic or mechanical, for any purpose, without the express written permission of Bear Stearns.
+COPYRIGHT Â© 2001-2002 Bear, Stearns and Co. Inc.   All rights reserved.
+-->
+<schema targetNamespace="urn:bearstearns.com:bsc.soap.BSCHeader:v2.0" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:bsch="urn:bearstearns.com:bsc.soap.BSCHeader:v2.0" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<element name="BSCHeader" type="bsch:bscHeaderType">
+		<annotation>
+			<documentation>
+XML Schema for Bear Stearns SOAP BSCHeader v2.0
+
+This header is intended to provide a standard means of encapsulating authentication, routing, debuging and versioning information for Bear Stearns SOAP services.  Much of the information contained within this header will likely be replaced by standards emerging from the WS-I.  In the interim, this header will provided the needed funtionality and in the long term, fill the gaps between WS-I standards and Bear Stearns needs.
+Update: 8/16/2006
+	Modify Authentication Element to allow AuthToken, UserID, and Password combination.
+	
+		</documentation>
+		</annotation>
+	</element>
+	<complexType name="bscHeaderType">
+		<all>
+			<element ref="bsch:CorrelationID" minOccurs="0"/>
+			<element ref="bsch:RoutingInfo" minOccurs="0"/>
+			<element ref="bsch:Authentication" minOccurs="0"/>
+			<element ref="bsch:TimeStamp" minOccurs="0"/>
+			<element ref="bsch:SourceInfo" minOccurs="0"/>
+			<element ref="bsch:InboundSchemaVersion" minOccurs="0"/>
+			<element ref="bsch:OutboundSchemaVersion" minOccurs="0"/>
+		</all>
+		<anyAttribute/>
+	</complexType>
+	<complexType name="authenticationType">
+		<choice>
+			
+			<element ref="bsch:AuthToken"/>
+			<sequence>
+				<element ref="bsch:UserID" minOccurs="1" maxOccurs="1"/>
+				<element ref="bsch:Password" minOccurs="1" maxOccurs="1"/>
+				<element ref="bsch:AuthToken" minOccurs="0"/>
+			</sequence>
+			
+		</choice>
+	</complexType>
+	<element name="Authentication" type="bsch:authenticationType">
+		<annotation>
+			<documentation>The Authentication element encapsolates the Authtoken or UserID, Password pair.  Usage: Typically used as an in parameter, but an Authtoken may be supplied as an out as well.  UserID,Password pair should never be used as an out parameter.</documentation>
+		</annotation>
+	</element>
+	<!-- Definition of simple type elements -->
+	<element name="AuthToken" type="string">
+		<annotation>
+			<documentation>Contains an authentication token which should be valid within the authenticating realm of the target service.  Note that this element is typically used as an in parameter, but may also be supplied as a return parameter.</documentation>
+		</annotation>
+	</element>
+	<element name="UserID" type="string">
+		<annotation>
+			<documentation>UserID and Password elements are used to hold authentication information.  If supplied, they will be used to authenticate the calling client against the authentication realm of the target service.</documentation>
+		</annotation>
+	</element>
+	<element name="Password" type="string"/>
+	<element name="CorrelationID" type="string">
+		<annotation>
+			<documentation>The CorrelationID is optional and can be used to correlate request/response pairs.  If sent on a request, it should simply be returned on the corresponding response.  Usage: in/out.</documentation>
+		</annotation>
+	</element>
+	<element name="RoutingInfo" type="string">
+		<annotation>
+			<documentation>The RoutingInfo element can be used to identify which service is to be invoked.  It is important to note that the RoutingInfo can also be obtained from HTTP URL, SOAPAction (deprecated with SOAP 1.2) header or by top level QNames within the SOAP Body.  Entering the RoutingInfo in the BCSHeader overrides these other sources. Usage: In.</documentation>
+		</annotation>
+	</element>
+	<element name="TimeStamp" type="string">
+		<annotation>
+			<documentation>The TimeStamp element is used to provide both Date and Time detail for debugging purposes.  Format of this information can be defined by the service, but W3C GMT format is prefered, "dd/MMM/yyyy:HH:mm:ss +0000".  Usage: in/out.</documentation>
+		</annotation>
+	</element>
+	<element name="SourceInfo" type="string">
+		<annotation>
+			<documentation>The SourceInfo element provides information useful in debugging distributed systems.  It will typically consists of concatenated information that can be used to identify the client or service.  Usage: in/out.</documentation>
+		</annotation>
+	</element>
+	<element name="InboundSchemaVersion" type="string">
+		<annotation>
+			<documentation>This element is optional and is used to identify the schema version of the request.  	Usage: in.</documentation>
+		</annotation>
+	</element>
+	<element name="OutboundSchemaVersion" type="string">
+		<annotation>
+			<documentation>This element is optional and is used to identify the schema version of the response.  If the target service supports this feature, but not the version requested, an error should be returned.  Usage: in.</documentation>
+		</annotation>
+	</element>
+</schema>
